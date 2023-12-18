@@ -39,5 +39,60 @@ namespace Timesheets.Test
             // Assert
             mockRepository.Verify(repo => repo.AddTimesheet(It.IsAny<Timesheet>()), Times.Once);
         }
+
+        [Fact]
+        public void GivenNoTimesheets_WhenViewTimeSheets_ThenReturnEmptyList()
+        {
+            var mockRepository = new Mock<ITimesheetRepository>();
+            mockRepository.Setup(repo => repo.ViewTimeSheets()).Returns(new List<TimesheetViewer>());
+
+            var timesheetService = new TimesheetService(mockRepository.Object);
+
+            var result = timesheetService.ViewTimeSheets();
+
+            Assert.NotNull(result);
+            Assert.Equal(0, result.Count);
+        }
+
+        [Fact]
+        public void GivenTimesheets_WhenViewTimeSheets_ThenReturnListWithCorrectData()
+        {
+            var timesheets = new List<TimesheetViewer>
+        {
+            new TimesheetViewer
+            {
+
+                    Project = "ProjectA",
+                    FirstName = "John",
+                    LastName = "Doe",
+                    TotalHours = 5
+
+            },
+            new TimesheetViewer
+            {
+                
+                    Project = "ProjectB",
+                    FirstName = "Jane",
+                    LastName = "Smith",
+                    TotalHours = 7.5
+
+            }
+        };
+
+            var mockRepository = new Mock<ITimesheetRepository>();
+            mockRepository.Setup(repo => repo.ViewTimeSheets()).Returns(timesheets);
+
+            var timesheetService = new TimesheetService(mockRepository.Object);
+
+            var result = timesheetService.ViewTimeSheets();
+
+            Assert.NotNull(result);
+            Assert.Equal(2, result.Count);
+            Assert.Equal("ProjectA", result[0].Project);
+            Assert.Equal("John", result[0].FirstName);
+            Assert.Equal("Doe", result[0].LastName);
+            Assert.Equal(5.0, result[0].TotalHours);
+        }
+
     }
 }
