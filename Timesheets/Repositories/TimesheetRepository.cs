@@ -1,4 +1,5 @@
-﻿using Timesheets.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
+using Timesheets.Infrastructure;
 using Timesheets.Models;
 
 namespace Timesheets.Repositories
@@ -23,10 +24,11 @@ namespace Timesheets.Repositories
             _context.SaveChanges();
         }
 
-        public IList<Timesheet> GetAllTimesheets()
-        {
-            var timesheets = _context.Timesheets.ToList();
-            return timesheets;
-        }
-    }
+		public IList<Timesheet> GetAllTimesheets()
+		{
+			var timesheets = _context.Timesheets.Include(x => x.TimesheetEntry).ToList();
+
+			return timesheets;
+		}
+	}
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Timesheets.Models;
 using Timesheets.Services;
@@ -16,7 +17,9 @@ namespace Timesheets.Controllers
 
         public IActionResult Index()
         {
-            return View();
+			var timesheets = _timesheetService.GetAll().OrderBy(x => x.TotalHours);
+			ViewBag.Timesheets = timesheets;
+			return View();
         }
 
         [HttpPost]
@@ -29,12 +32,13 @@ namespace Timesheets.Controllers
             };
 
             _timesheetService.Add(timesheet);
+            
+			ViewBag.Timesheets = _timesheetService.GetAll();
 
-            var timesheets = _timesheetService.GetAll();
-
-            return View();
+			return View();
         }
 
+    
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

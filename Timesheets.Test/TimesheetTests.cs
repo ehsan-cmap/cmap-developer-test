@@ -60,9 +60,10 @@ namespace Timesheets.Test
 
 			var timesheetsList = Enumerable.Range(1, 10).Select(i => new Timesheet
 			{
-				Id = i,
+				Id = i ,
 				TimesheetEntry = new TimesheetEntry
 				{
+					Id = i ,
 					Project = $"Project {i}",
 					FirstName = "Louis",
 					LastName = "Thompson",
@@ -77,12 +78,12 @@ namespace Timesheets.Test
 			}
 
 			Console.WriteLine(timesheetsList.Count);
-			
-			//Sets up all timesheets from memory 
-			_mockRepository.Setup(repo => repo.GetAllTimesheets()).Returns(timesheetsList);
 
-			// Act
-			var result = _timesheetService.GetAll();
+            //Sets up all timesheets from a Mock TimesheetRepository 
+            _mockRepository.Setup(repo => repo.GetAllTimesheets()).Returns(timesheetsList);
+
+            // Act
+            var result = _timesheetService.GetAll();
 			Console.WriteLine(result);
 
 			// Assert
