@@ -11,7 +11,7 @@ services.AddControllersWithViews();
 services.AddDbContext<DataContext>();
 services.AddScoped<ITimesheetService, TimesheetService>();
 services.AddScoped<ITimesheetRepository, TimesheetRepository>();
-services.AddScoped<ICsvService, CSVExportServicecs>();
+services.AddScoped<ICsvService, CSVExportService>();
 
 
 var app = builder.Build();

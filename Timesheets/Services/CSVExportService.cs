@@ -8,7 +8,7 @@ namespace Timesheets.Services
         string CreateCSV(IList<Timesheet> timesheets);
     }
 
-    public class CSVExportServicecs : ICsvService
+    public class CSVExportService : ICsvService
     {
         public string CreateCSV(IList<Timesheet> timesheets)
         {

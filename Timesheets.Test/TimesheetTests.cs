@@ -135,7 +135,7 @@ namespace Timesheets.Test
 		[Fact]
 		public void GivenAListOfTimesheets_ReturnStringInCSVFormat()
 		{
-			var csvService = new CSVExportServicecs();
+			var csvService = new CSVExportService();
 			var timesheets = new List<Timesheet>()
 		{ new Timesheet{ TimesheetEntry = new TimesheetEntry { Date ="19/12/2023", FirstName="Louis", Hours = "7.5", LastName ="Thompson", Project ="Test Project" }, TotalHours = "7.5" } };
 
@@ -147,7 +147,7 @@ namespace Timesheets.Test
 		[Fact]
 		public void GivenAnEmptyListOfTimesheets_RetrunAnEmptyString()
 		{
-			var csvService = new CSVExportServicecs();
+			var csvService = new CSVExportService();
 			var timesheets = new List<Timesheet>();
 			var csv = csvService.CreateCSV(timesheets);
 			Assert.Equal(string.Empty, csv);
