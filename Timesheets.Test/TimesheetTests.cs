@@ -12,7 +12,17 @@ namespace Timesheets.Test
 {
     public class TimesheetTests
     {
-        [Fact]
+		
+		private readonly TimesheetService _timesheetService;
+		private readonly Mock<ITimesheetRepository> _mockRepository;
+
+		public TimesheetTests()
+		{
+			_mockRepository = new Mock<ITimesheetRepository>();
+			_timesheetService = new TimesheetService(_mockRepository.Object);
+		}
+
+		[Fact]
         public void GivenAValidTimesheet_ThenAddTimesheetToInMemoryDatabase()
         {
             //Arrange
@@ -33,11 +43,51 @@ namespace Timesheets.Test
             var mockRepository = new Mock<ITimesheetRepository>();
             var timesheetService = new TimesheetService(mockRepository.Object);
 
-            // Act
-            timesheetService.Add(timesheet);
+			// Act
+			_timesheetService.Add(timesheet);
 
-            // Assert
-            mockRepository.Verify(repo => repo.AddTimesheet(It.IsAny<Timesheet>()), Times.Once);
+			// Assert
+			_mockRepository.Verify(repo => repo.AddTimesheet(It.IsAny<Timesheet>()), Times.Once);
         }
-    }
+
+
+		[Fact]
+		public void GivenFetchAllTimesheets_ReturnAllTimeSheetsFromDatabase()
+		{
+			// Arrange
+			//Creates Mock Data
+			var RandomHours = new Random();
+
+			var timesheetsList = Enumerable.Range(1, 10).Select(i => new Timesheet
+			{
+				Id = i,
+				TimesheetEntry = new TimesheetEntry
+				{
+					Project = $"Project {i}",
+					FirstName = "Louis",
+					LastName = "Thompson",
+					Hours = RandomHours.Next(1, 9).ToString("0.0")
+				},
+
+			}).ToList();
+
+			foreach (var timesheet in timesheetsList)
+			{
+				_timesheetService.Add(timesheet);
+			}
+
+			Console.WriteLine(timesheetsList.Count);
+			
+			//Sets up all timesheets from memory 
+			_mockRepository.Setup(repo => repo.GetAllTimesheets()).Returns(timesheetsList);
+
+			// Act
+			var result = _timesheetService.GetAll();
+			Console.WriteLine(result);
+
+			// Assert
+			Assert.NotNull(result);
+			Assert.Equal(10, result.Count);
+		}
+	}
 }
