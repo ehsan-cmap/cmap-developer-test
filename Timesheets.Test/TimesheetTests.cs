@@ -141,7 +141,7 @@ namespace Timesheets.Test
 
 			var csv = csvService.CreateCSV(timesheets);
 
-			Assert.Equal("Id, FirstName, LastName, Date, Project, Hours, TotalHours\r\n0, first, last, 01/01/2001, proj, 8, 8\r\n", csv);
+			Assert.Equal("Id, FirstName, LastName, Date, Project, Hours, TotalHours\r\n0, Louis, Thompson, 19/12/2023, Test Project, 7.5, 7.5\r\n", csv);
 		}
 
 		[Fact]
