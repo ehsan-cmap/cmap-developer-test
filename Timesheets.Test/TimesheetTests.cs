@@ -93,46 +93,64 @@ namespace Timesheets.Test
 		}
 
 
-        [Fact]
-        public void GetAll_ReturnsTimesheetsInSizeOrder()
-        {
-            // Arrange
-            //Creates Mock Data
-            var RandomHours = new Random();
+		[Fact]
+		public void GetAll_ReturnsTimesheetsInSizeOrder()
+		{
+			// Arrange
+			//Creates Mock Data
+			var RandomHours = new Random();
 
-            var timesheetsList = Enumerable.Range(1, 10).Select(i => new Timesheet
-            {
-                Id = i,
-                TimesheetEntry = new TimesheetEntry
-                {
-                    Id = i,
-                    Project = $"Project {i}",
-                    FirstName = "Louis",
-                    LastName = "Thompson",
-                    Hours = RandomHours.Next(1, 9).ToString("0.0")
-                },
-
-            }).ToList();
-
-            foreach (var timesheet in timesheetsList)
-            {
-                _timesheetService.Add(timesheet);
-            }
-
-
-            _mockRepository.Setup(repo => repo.GetAllTimesheets()).Returns(timesheetsList);
-
-            // Act
-            var result = _timesheetService.GetAll();
-            // Act
-            var timesheets = _timesheetService.GetAll();
-			
-			foreach (var timesheet in timesheets)
+			var timesheetsList = Enumerable.Range(1, 10).Select(i => new Timesheet
 			{
-				Console.WriteLine(timesheet.TotalHours);
+				Id = i,
+				TimesheetEntry = new TimesheetEntry
+				{
+					Id = i,
+					Project = $"Project {i}",
+					FirstName = "Louis",
+					LastName = "Thompson",
+					Hours = RandomHours.Next(1, 9).ToString("0.0")
+				},
+
+			}).ToList();
+
+			foreach (var timesheet in timesheetsList)
+			{
+				_timesheetService.Add(timesheet);
 			}
-            // Assert
-            Assert.True(timesheets.OrderBy(timesheet => timesheet.TimesheetEntry.Hours).SequenceEqual(timesheets));
-        }
-    }
+
+			_mockRepository.Setup(repo => repo.GetAllTimesheets()).Returns(timesheetsList);
+
+			// Act
+
+			var timesheets = _timesheetService.GetAll();
+
+
+			// Assert
+			Assert.True(timesheets.OrderBy(timesheet => timesheet.TotalHours).SequenceEqual(timesheets));
+		}
+
+
+
+		[Fact]
+		public void GivenAListOfTimesheets_ReturnStringInCSVFormat()
+		{
+			var csvService = new CSVExportServicecs();
+			var timesheets = new List<Timesheet>()
+		{ new Timesheet{ TimesheetEntry = new TimesheetEntry { Date ="19/12/2023", FirstName="Louis", Hours = "7.5", LastName ="Thompson", Project ="Test Project" }, TotalHours = "7.5" } };
+
+			var csv = csvService.CreateCSV(timesheets);
+
+			Assert.Equal("Id, FirstName, LastName, Date, Project, Hours, TotalHours\r\n0, first, last, 01/01/2001, proj, 8, 8\r\n", csv);
+		}
+
+		[Fact]
+		public void GivenAnEmptyListOfTimesheets_RetrunAnEmptyString()
+		{
+			var csvService = new CSVExportServicecs();
+			var timesheets = new List<Timesheet>();
+			var csv = csvService.CreateCSV(timesheets);
+			Assert.Equal(string.Empty, csv);
+		}
+	}
 }
