@@ -39,3 +39,5 @@ We need you to add functionality to the Timesheets web application so that all t
 - You can take as long as you need to complete this assignment. But do remember that this is throwaway code and the aim is to demonstrate your approach rather than build a complete system.
 
 - You do not need to deploy the application.
+
+- If you have forked our repo then your solution will be visible to others, so please delete your repo once it has been reviewed.  
